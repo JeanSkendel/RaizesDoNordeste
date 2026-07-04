@@ -1,5 +1,8 @@
+from enum import Enum
+
 import bcrypt
-from sqlalchemy import Column, Integer, String, Enum as perfilEnum
+from sqlalchemy import Column, Integer, String, Enum as prfEnum, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.bancoDeDados.conexao import Base
 from app.perfil.usuario import Perfil
@@ -13,7 +16,7 @@ class Usuario(Base):
     telefone = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True, index=True)
     senha = Column(String, nullable=False)
-    perfil = Column(perfilEnum(Perfil), nullable=False)
+    perfil = Column(prfEnum(Perfil), nullable=False)
 
     #Responsável por gerar o hash da senha
     def gerarHash(self, senha: str) -> str:
@@ -23,3 +26,46 @@ class Usuario(Base):
     #Verifica a senha armazenada com hash
     def verificarSenha(self, senha: str) -> bool:
         return bcrypt.checkpw(senha.encode('utf-8'), self.senha.encode('utf-8'))
+
+class CanalPedido(str, Enum):
+    app = "app"
+    web = "web"
+    totem = "totem"
+    caixa = "caixa"
+
+class StatusPedido(str, Enum):
+    aguardarPagamento = "AguardandoConfirmacaoPagamento"
+    pedidoEmPreparacao = "PedidoEmPreparacao"
+    pedidoPronto = "PedidoPronto"
+    pedidoEntregue = "PedidoEntregue"
+    cancelarPedido = "PedidoCancelado"
+
+class Pedido(Base):
+    __tablename__ = "pedidos"
+
+    idPedido = Column(Integer, primary_key=True, index=True)
+    clienteEmail = Column(String, nullable=False)
+    canalPedido = Column(prfEnum(CanalPedido), nullable=False)
+    status = Column(prfEnum(StatusPedido), default=StatusPedido.aguardarPagamento)
+    idUsuario = Column(Integer, ForeignKey("usuarios.idUsuario"))
+
+    usuario = relationship("Usuario")
+    itens = relationship("PedidoItem", back_populates="pedido", cascade="all, delete-orphan")
+
+class Produto(Base):
+    __tablename__ = "produtos"
+
+    idProduto = Column(Integer, primary_key=True, index=True)
+    nome = Column(String, nullable=False)
+    descricao = Column(String, nullable=True)
+
+class PedidoItem(Base):
+    __tablename__ = "pedido_itens"
+
+    idItem = Column(Integer, primary_key=True, index=True)
+    idPedido = Column(Integer, ForeignKey("pedidos.idPedido"))
+    idProduto = Column(Integer, ForeignKey("produtos.idProduto"))
+    quantidade = Column(Integer, default=1)
+
+    pedido = relationship("Pedido", back_populates="itens")
+    produto = relationship("Produto")

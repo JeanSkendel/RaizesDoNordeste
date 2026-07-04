@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 
 from app.bancoDeDados.conexao import Base, engine
-from app.controle import autenticarUsuario
+from app.controle import autenticarUsuario, pedidos
 
 app = FastAPI(
-    title='Projeto Raizes do Nordeste',
+    title='Raizes do Nordeste',
     description='Atividade prática',
     version='1.0'
 )
@@ -35,4 +35,5 @@ def index():
     }
 
 app.include_router(autenticarUsuario.router)
+app.include_router(pedidos.router)
 Base.metadata.create_all(engine)
