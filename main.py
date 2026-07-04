@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 
+from app.bancoDeDados.conexao import Base, engine
+from app.controle import autenticarUsuario
+
 app = FastAPI(
     title='Projeto Raizes do Nordeste',
     description='Atividade prática',
@@ -30,3 +33,6 @@ def index():
         'fidelidade': 'resgatarPontos'
         }
     }
+
+app.include_router(autenticarUsuario.router)
+Base.metadata.create_all(engine)

@@ -1,1 +1,5 @@
 fastapi
+bcrypt
+data
+jose
+sqlalchemy
