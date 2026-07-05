@@ -69,3 +69,13 @@ class PedidoItem(Base):
 
     pedido = relationship("Pedido", back_populates="itens")
     produto = relationship("Produto")
+
+class Estoque(Base):
+    __tablename__ = "controle"
+
+    idEstoque = Column(Integer, primary_key=True, index=True)
+    idProduto = Column(Integer, ForeignKey("produtos.idProduto"))
+    idFilial = Column(Integer, nullable=False)
+    quantidade = Column(Integer, default=0)
+
+    produto = relationship("Produto")

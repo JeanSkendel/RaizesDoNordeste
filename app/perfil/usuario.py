@@ -3,9 +3,9 @@ import bcrypt
 
 #Armazena a seleção do perfil do usuário
 class Perfil(str, Enum):
-    cliente = 'cliente'
-    funcionario = 'funcionario'
-    gerente = 'gerente'
+    cliente = "cliente"
+    funcionario = "funcionario"
+    gerente = "gerente"
 
 #Cria a classe usuário
 class Usuario:

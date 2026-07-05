@@ -17,7 +17,7 @@ def get_db():
         db.close()
 
 #Processar pagamento do pedido
-@router.post("/pagamentos/{idPedido}")
+@router.post("/processarPagamento")
 def processar_pagamento(idPedido: int, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     pedido = db.query(Pedido).filter(Pedido.idPedido == idPedido, Pedido.clienteEmail == usuario.email).first()
     if not pedido:

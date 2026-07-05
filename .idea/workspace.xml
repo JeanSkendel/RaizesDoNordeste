@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63804962-b303-4d7b-8e1f-bf26042dbc90" name="Changes" comment="Implementado a criação de pedidos, listar pedidos e atualizar status dos pedidos, também foi feito a correção de código no autenticarUsuario.py">
-      <change afterPath="$PROJECT_DIR$/app/controle/pagamento.py" afterDir="false" />
+    <list default="true" id="63804962-b303-4d7b-8e1f-bf26042dbc90" name="Changes" comment="Adicionado a simulação de pagamento.">
+      <change afterPath="$PROJECT_DIR$/app/controle/estoque.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/bancoDeDados/estruturaBanco.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bancoDeDados/estruturaBanco.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controle/pagamento.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/pagamento.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controle/pedidos.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/pedidos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/perfil/usuario.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/perfil/usuario.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783201871879</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Adicionado a simulação de pagamento.">
+      <option name="closed" value="true" />
+      <created>1783219615202</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1783219615202</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,6 +158,7 @@
     <MESSAGE value="Criação inicial do trabalho prático Raizes do Nordeste" />
     <MESSAGE value="Implementação do cadastro de usuário, login e salvar as informações do usuário no banco de dados." />
     <MESSAGE value="Implementado a criação de pedidos, listar pedidos e atualizar status dos pedidos, também foi feito a correção de código no autenticarUsuario.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementado a criação de pedidos, listar pedidos e atualizar status dos pedidos, também foi feito a correção de código no autenticarUsuario.py" />
+    <MESSAGE value="Adicionado a simulação de pagamento." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adicionado a simulação de pagamento." />
   </component>
 </project>
