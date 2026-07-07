@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.bancoDeDados.conexao import SessionLocal
-from app.bancoDeDados.estruturaBanco import CanalPedido, StatusPedido, Pedido, PedidoItem, Estoque
+from app.bancoDeDados.estruturaBanco import CanalPedido, StatusPedido, Pedido, PedidoItem, Estoque, LogAuditoria, \
+    Fidelidade
 from app.controle.autenticarUsuario import verificarToken
+from app.erros.tratarErros import tratarErro
 
 router = APIRouter()
 
@@ -16,13 +18,13 @@ def get_db():
 
 #Criar pedidos
 @router.post("/criarPedidos")
-def criar_pedidos(idProduto: int, idFilial: int, canalPedido: CanalPedido, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
+def criar_pedidos(idProduto: int, idFilial: int, quantidade: int, canalPedido: CanalPedido, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     if usuario.perfil == "cliente" and canalPedido == CanalPedido.caixa:
-        raise HTTPException(status_code=403, detail="Clientes não podem criar pedidos no canal caixa")
+        raise tratarErro(403, "Clientes não podem criar pedidos no canal caixa")
     if usuario.perfil == "funcionario" and canalPedido != CanalPedido.caixa:
-        raise HTTPException(status_code=403, detail="Funcionários só podem criar pedidos no canal caixa")
+        raise tratarErro(403, "Funcionários só podem criar pedidos no canal caixa")
     if usuario.perfil not in ["cliente", "funcionario"]:
-        raise HTTPException(status_code=403, detail="Somente clientes ou funcionários podem criar pedidos")
+        raise tratarErro(403, "Somente clientes ou funcionários podem criar pedidos")
 
     pedido = Pedido(clienteEmail=usuario.email, canalPedido=canalPedido, idUsuario=usuario.idUsuario, status=StatusPedido.aguardarPagamento)
     db.add(pedido)
@@ -32,16 +34,21 @@ def criar_pedidos(idProduto: int, idFilial: int, canalPedido: CanalPedido, db: S
     #Verificar estoque
     estoque = db.query(Estoque).filter(Estoque.idProduto == idProduto, Estoque.idFilial == idFilial).first()
     if not estoque or estoque.quantidade <= 0:
-        raise HTTPException(status_code=400, detail=f"Atenção: Produto {idProduto} sem estoque ou indisponível!")
+        raise tratarErro(400, f"Atenção: Produto {idProduto} sem estoque ou indisponível!")
 
-    estoque.quantidade -= 1
+    estoque.quantidade -= quantidade
     if estoque.quantidade < 0:
-        raise HTTPException(status_code=400, detail="Saldo de estoque insuficiente")
-    pedidosItem = PedidoItem(idPedido=pedido.idPedido, idProduto=idProduto, quantidade=estoque.quantidade)
+        raise tratarErro(400, "O saldo do estoque é insuficiente!")
+    pedidosItem = PedidoItem(idPedido=pedido.idPedido, idProduto=idProduto, quantidade=quantidade)
     db.add(pedidosItem)
+
+    #Registra na auditoria a criação do pedido
+    log = LogAuditoria(idUsuario=usuario.idUsuario, acao="ATUALIZAR_ESTOQUE", detalhe=f"Produto {idProduto} na filial {idFilial} atualizado para {estoque.quantidade} unidades.")
+    db.add(log)
     db.commit()
     db.refresh(pedido)
-    return {"idPedido": pedido.idPedido, "canalPedido": pedido.canalPedido, "status": pedido.status, "itens": [{"idProduto": i.idProduto, "quantidade": i.quantidade} for i in pedido.itens]}
+
+    return {"idPedido": pedido.idPedido, "canalPedido": pedido.canalPedido, "status": pedido.status, "quantidade": quantidade, "Quantidade ainda disponível no estoque": [{"quantidade": i.quantidade} for i in pedido.itens]}
 
 #Permite o funcionário e o gerente listar os pedidos criados
 @router.get("/listarPedidos")
@@ -54,13 +61,33 @@ def listar_pedidos(db: Session = Depends(get_db), usuario = Depends(verificarTok
 @router.patch("/atualizarStatusPedido")
 def atualizar_status(idPedido: int, atualizaStatus: StatusPedido, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     if usuario.perfil not in ["funcionario", "gerente"]:
-        raise HTTPException(status_code=403, detail="Somente funcionários ou gerentes podem atualizar pedidos")
+        raise tratarErro(403, "Somente funcionários ou gerentes podem atualizar pedidos.")
 
     pedido = db.query(Pedido).filter(Pedido.idPedido == idPedido).first()
     if not pedido:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+        raise tratarErro(404, "Erro: Pedido não encontrado!")
 
     pedido.status = atualizaStatus
     db.commit()
     db.refresh(pedido)
+
+    #Após o pedido ser entregue o cliente recebe pontos de fidelidade
+    if atualizaStatus == StatusPedido.pedidoEntregue:
+        fidelidade = db.query(Fidelidade).filter(Fidelidade.idUsuario == pedido.idUsuario).first()
+        if not fidelidade:
+            fidelidade = Fidelidade(idUsuario=pedido.idUsuario, pontos=0)
+            db.add(fidelidade)
+
+        logFidelidade = db.query(LogAuditoria).filter(LogAuditoria.idUsuario == pedido.idUsuario, LogAuditoria.acao == "FIDELIDADE", LogAuditoria.detalhe.like(f"%Pedido {pedido.idPedido}%")).first()
+
+        if not logFidelidade:
+            pontos = sum(item.quantidade for item in pedido.itens)
+            fidelidade.pontos += pontos
+
+            log = LogAuditoria(idUsuario=pedido.idUsuario, acao="FIDELIDADE", detalhe=f"Pedido {pedido.idPedido} entregue. Cliente {pedido.clienteEmail} recebeu {pontos} pontos de fidelidade!")
+            db.add(log)
+
+        db.commit()
+        db.refresh(fidelidade)
+
     return {"idPedido": pedido.idPedido, "status": pedido.status}

@@ -1,7 +1,8 @@
+from datetime import datetime, timezone
 from enum import Enum
 
 import bcrypt
-from sqlalchemy import Column, Integer, String, Enum as prfEnum, ForeignKey
+from sqlalchemy import Column, Integer, String, Enum as prfEnum, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
 from app.bancoDeDados.conexao import Base
@@ -17,6 +18,7 @@ class Usuario(Base):
     email = Column(String, nullable=False, unique=True, index=True)
     senha = Column(String, nullable=False)
     perfil = Column(prfEnum(Perfil), nullable=False)
+    consentimentoLGPD = Column(Boolean, nullable=False, default=False)
 
     #Responsável por gerar o hash da senha
     def gerarHash(self, senha: str) -> str:
@@ -79,3 +81,28 @@ class Estoque(Base):
     quantidade = Column(Integer, default=0)
 
     produto = relationship("Produto")
+
+class Fidelidade(Base):
+    __tablename__ = "fidelidade"
+
+    idFidelidade = Column(Integer, primary_key=True, index=True)
+    idUsuario = Column(Integer, ForeignKey("usuarios.idUsuario"))
+    pontos = Column(Integer, default=0)
+
+    usuario = relationship("Usuario")
+
+class LogAuditoria(Base):
+    __tablename__ = "logs_auditoria"
+
+    idLog = Column(Integer, primary_key=True, index=True)
+    idUsuario = Column(Integer, ForeignKey("usuarios.idUsuario"), nullable=True)
+    acao = Column(String, nullable=False)
+    detalhe = Column(String, nullable=True)
+    timestamp = Column(DateTime, default=datetime.now(timezone.utc))
+
+    usuario = relationship("Usuario")
+
+    def __init__(self, idUsuario=None, acao=None, detalhe=None):
+        self.idUsuario = idUsuario
+        self.acao = acao
+        self.detalhe = detalhe

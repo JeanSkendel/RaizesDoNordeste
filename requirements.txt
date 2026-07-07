@@ -3,3 +3,4 @@ bcrypt
 data
 jose
 sqlalchemy
+uvicorn

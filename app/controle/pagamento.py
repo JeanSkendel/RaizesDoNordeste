@@ -1,11 +1,12 @@
 import random
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.bancoDeDados.conexao import SessionLocal
-from app.bancoDeDados.estruturaBanco import Pedido, CanalPedido, StatusPedido
+from app.bancoDeDados.estruturaBanco import Pedido, CanalPedido, StatusPedido, LogAuditoria
 from app.controle.autenticarUsuario import verificarToken
+from app.erros.tratarErros import tratarErro
 
 router = APIRouter()
 
@@ -21,12 +22,12 @@ def get_db():
 def processar_pagamento(idPedido: int, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     pedido = db.query(Pedido).filter(Pedido.idPedido == idPedido, Pedido.clienteEmail == usuario.email).first()
     if not pedido:
-        raise HTTPException(status_code=404, detail="Erro: Pedido não encontrado!")
+        raise tratarErro(404,"Erro: Pedido não encontrado!")
 
     if pedido.canalPedido == CanalPedido.caixa and usuario.perfil != "funcionario":
-        raise HTTPException(status_code=403, detail="Somente funcionários podem processar pagamentos no caixa")
+        raise tratarErro(403,"Somente funcionários podem processar pagamentos no caixa")
     elif pedido.canalPedido != CanalPedido.caixa and usuario.perfil != "cliente":
-        raise HTTPException(status_code=403, detail="Somente clientes podem realizar pagamentos fora do caixa")
+        raise tratarErro(403,"Somente clientes podem realizar pagamentos fora do caixa")
 
     #Simula a aprovação de pagamento
     pagamento = random.choice([True, False])
@@ -41,4 +42,9 @@ def processar_pagamento(idPedido: int, db: Session = Depends(get_db), usuario = 
 
     db.commit()
     db.refresh(pedido)
+
+    #Registra o processamento do pagamento na auditoria
+    log = LogAuditoria(usuario.idUsuario, acao="PROCESSAR_PAGAMENTO", detalhe=f"Pedido {pedido.idPedido} pagamento {"aprovado" if pagamento else "recusado"}")
+    db.add(log)
+    db.commit()
     return {"idPedido": pedido.idPedido, "status": pedido.status, "mensagem": statusMensagem}

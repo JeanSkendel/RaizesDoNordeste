@@ -1,20 +1,23 @@
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Form
+from fastapi import APIRouter, Depends, Form
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
 from app.bancoDeDados.conexao import SessionLocal
 from app.bancoDeDados.estruturaBanco import Usuario, Perfil
+from app.erros.tratarErros import tratarErro
 
 router = APIRouter()
 
+#Permite definir a chave secreta
 SECRET_KEY = "bf1347g49t89c"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/entrar")
+#Autenticação de login do usuário
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="usuario/entrar")
 
 def get_db():
     db = SessionLocal()
@@ -36,20 +39,20 @@ def verificarToken(token: str = Depends(oauth2_scheme), db: Session = Depends(ge
         dadosToken = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = dadosToken.get("tokenUsuario")
         if email is None:
-            raise HTTPException(status_code=401, detail="Atenção: Esse Token é inválido!")
+            raise tratarErro(401,"Atenção: Esse Token é inválido!")
     except JWTError:
-        raise HTTPException(status_code=401, detail="Atenção: Este Token parece inválido ou expirado!")
+        raise tratarErro(401,"Atenção: Este Token parece inválido ou expirado!")
 
     usuario = db.query(Usuario).filter(Usuario.email == email).first()
     if usuario is None:
-        raise HTTPException(status_code=401, detail="Erro: Não foi possível encontrar esse Usuário!")
+        raise tratarErro(401,"Erro: Não foi possível encontrar esse Usuário!")
     return usuario
 
 #Cadastrar usuário
 @router.post("/cadastroUsuario")
 def cadastrar_usuario(nome: str, telefone: str, email: str, senha: str, perfil: Perfil, db: Session = Depends(get_db)):
     if db.query(Usuario).filter(Usuario.email == email).first():
-        raise HTTPException(status_code=400, detail="Erro: Este e-mail já está sendo usado por outro usuário!")
+        raise tratarErro(400,"Erro: Este e-mail já está sendo usado por outro usuário!")
 
     usuario = Usuario(nome=nome, telefone=telefone, email=email, perfil=perfil)
     usuario.gerarHash(senha)
@@ -63,6 +66,6 @@ def cadastrar_usuario(nome: str, telefone: str, email: str, senha: str, perfil: 
 def entrar(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.email == username).first()
     if not usuario or not usuario.verificarSenha(password):
-        raise HTTPException(status_code=401,detail="Erro: Os dados informados são inválidos!")
+        raise tratarErro(401,"Erro: Os dados informados são inválidos!")
     token = criarTokenUsuario({"tokenUsuario": usuario.email, "perfil": usuario.perfil})
     return {"access_token": token, "token_type": "bearer"}
