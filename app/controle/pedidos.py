@@ -20,9 +20,9 @@ def get_db():
 @router.post("/criarPedidos")
 def criar_pedidos(idProduto: int, idFilial: int, quantidade: int, canalPedido: CanalPedido, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     if usuario.perfil == "cliente" and canalPedido == CanalPedido.caixa:
-        raise tratarErro(403, "Clientes não podem criar pedidos no canal caixa")
+        raise tratarErro(403, "Clientes não podem criar pedidos no caixa")
     if usuario.perfil == "funcionario" and canalPedido != CanalPedido.caixa:
-        raise tratarErro(403, "Funcionários só podem criar pedidos no canal caixa")
+        raise tratarErro(403, "Funcionários só podem criar pedidos no caixa")
     if usuario.perfil not in ["cliente", "funcionario"]:
         raise tratarErro(403, "Somente clientes ou funcionários podem criar pedidos")
 
@@ -43,7 +43,7 @@ def criar_pedidos(idProduto: int, idFilial: int, quantidade: int, canalPedido: C
     db.add(pedidosItem)
 
     #Registra na auditoria a criação do pedido
-    log = LogAuditoria(idUsuario=usuario.idUsuario, acao="ATUALIZAR_ESTOQUE", detalhe=f"Produto {idProduto} na filial {idFilial} atualizado para {estoque.quantidade} unidades.")
+    log = LogAuditoria(idUsuario=usuario.idUsuario, acao="CRIAR_PEDIDO", detalhe=f"Produto {idProduto} na filial {idFilial} atualizado para {estoque.quantidade} unidades.")
     db.add(log)
     db.commit()
     db.refresh(pedido)
@@ -84,7 +84,7 @@ def atualizar_status(idPedido: int, atualizaStatus: StatusPedido, db: Session = 
             pontos = sum(item.quantidade for item in pedido.itens)
             fidelidade.pontos += pontos
 
-            log = LogAuditoria(idUsuario=pedido.idUsuario, acao="FIDELIDADE", detalhe=f"Pedido {pedido.idPedido} entregue. Cliente {pedido.clienteEmail} recebeu {pontos} pontos de fidelidade!")
+            log = LogAuditoria(idUsuario=pedido.idUsuario, acao="FIDELIDADE", detalhe=f"Pedido {pedido.idPedido} entregue. Cliente {pedido.clienteEmail} recebeu {pontos} ponto(s) de fidelidade!")
             db.add(log)
 
         db.commit()

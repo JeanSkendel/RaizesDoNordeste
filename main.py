@@ -7,7 +7,7 @@ from app.perfil import fidelidade
 app = FastAPI(
     title='Raizes do Nordeste',
     description='Atividade prática',
-    version='1.5'
+    version='1.7'
 )
 
 @app.get('/')

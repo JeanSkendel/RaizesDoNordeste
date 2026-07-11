@@ -21,7 +21,7 @@ def consultar_pontos_cliente(db: Session = Depends(get_db), usuario = Depends(ve
     if usuario.perfil != "cliente":
         raise tratarErro(403, "Somente clientes possuem programa de fidelidade")
     if not usuario.consentimentoLGPD:
-        raise tratarErro(403, "É nessário aceitar o consentimento LGPD para usar o programa de fidelidade")
+        raise tratarErro(403, "Atenção: É nessário aceitar o consentimento LGPD para usar o programa de fidelidade!")
 
     fidelidade = db.query(Fidelidade).filter(Fidelidade.idUsuario == usuario.idUsuario).first()
     if not fidelidade:
@@ -51,10 +51,12 @@ def consentimentoLGPD(db: Session = Depends(get_db), usuario = Depends(verificar
     return {"mensagem": "O consentimento do usuário foi registrado com sucesso!"}
 
 #Permite o cliente resgatar os pontos de fidelidade
-@router.get("/fidelidade/resgatar")
+@router.get("/resgatar")
 def resgatar_pontos_fidelidade(resgatarPontos: int, db: Session = Depends(get_db), usuario = Depends(verificarToken)):
     if usuario.perfil != "cliente":
-        raise tratarErro(403, "Somente clientes podem resgatar os pontos de fidelidade")
+        raise tratarErro(403, "Somente clientes podem resgatar os pontos de fidelidade!")
+    if not usuario.consentimentoLGPD:
+        raise tratarErro(403, "Atenção: É necessário aceitar o consentimento LGPD para usar o programa de fidelidade!")
 
     fidelidade = db.query(Fidelidade).filter(Fidelidade.idUsuario == usuario.idUsuario).first()
     if not fidelidade or fidelidade.pontos < resgatarPontos:

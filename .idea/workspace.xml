@@ -4,35 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63804962-b303-4d7b-8e1f-bf26042dbc90" name="Changes" comment="Conteúdo adicionado:&#10;&#10;+Adicionado o estoque&#10;Descrição: Permite o gerente atualizar o estoque.&#10;&#10;+Consultar estoque&#10;Descrição: Permite o funcionário ou gerente consultar o estoque.&#10;&#10;+Pedido não é criado sem estoque&#10;Descrição: Clientes não podem fazer pedidos se não tiver o item em estoque.">
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_10_FuncionarioListaPedidos.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_11_FuncionarioAtualizaStatusPedido.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_12_ClienteConsultaPontosFidelidadeSemConcentimentoLGPD.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_13_ClienteAceitaConcentimentoLGPD.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_14_ClienteConsultaPontos.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_15_ClienteResgataPontos.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_16_GerenteConsultaLogsAuditoria.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_1_CadastroUsuarioCliente.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_2_CadastroUsuarioFuncionario.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_3_CadastroUsuarioGerente.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_4_LoginUsuario.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_5_AtualizarEstoque.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_6_ConsultaEstoque.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_7_ClienteFazPrimeiroPedido.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_8_ClienteProcessaPagamentoPrimeiroPedido.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testes .JSON/Etapa_9_FuncionarioCriaPedidoClienteNoCaixa.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/controle/auditoria.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/erros/tratarErros.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/perfil/fidelidade.py" afterDir="false" />
+    <list default="true" id="63804962-b303-4d7b-8e1f-bf26042dbc90" name="Changes" comment="Conteúdo adicionado: auditoria.py, fidelidade.py e consentimentoLGPD&#10;&#10;+Auditoria&#10;Descrição: Permite o gerente logs de auditoria.&#10;&#10;+fidelidade&#10;Descrição: Cliente recebe pontos de fidelidade por pedido entregue.&#10;&#10;+consentimento LGPD&#10;Descrição: Cliente precisa aceitar o consimento LGPD para acessar e consultar os seus pontos.&#10;&#10;+consultaPontos&#10;Descrição: Cliente consulta pontos de fidelidade.&#10;&#10;+resgatarPontos&#10;Descrição: Cliente pode resgatar os seus pontos de fidelidade.&#10;&#10;+CorreçõesDeCódigo&#10;Descrição: Feito correção de código e implementado algumas melhorias.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/bancoDeDados/estruturaBanco.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bancoDeDados/estruturaBanco.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controle/autenticarUsuario.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/autenticarUsuario.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controle/estoque.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/estoque.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controle/pagamento.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/pagamento.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controle/pedidos.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controle/pedidos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/perfil/fidelidade.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/perfil/fidelidade.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,17 +45,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/jean1/PycharmProjects/RaizesDoNordeste/Testes .JSON"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/jean1/PycharmProjects/RaizesDoNordeste/Testes .JSON&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\jean1\PycharmProjects\RaizesDoNordeste\Testes .JSON" />
@@ -170,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783281479085</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Conteúdo adicionado: auditoria.py, fidelidade.py e consentimentoLGPD&#10;&#10;+Auditoria&#10;Descrição: Permite o gerente logs de auditoria.&#10;&#10;+fidelidade&#10;Descrição: Cliente recebe pontos de fidelidade por pedido entregue.&#10;&#10;+consentimento LGPD&#10;Descrição: Cliente precisa aceitar o consimento LGPD para acessar e consultar os seus pontos.&#10;&#10;+consultaPontos&#10;Descrição: Cliente consulta pontos de fidelidade.&#10;&#10;+resgatarPontos&#10;Descrição: Cliente pode resgatar os seus pontos de fidelidade.&#10;&#10;+CorreçõesDeCódigo&#10;Descrição: Feito correção de código e implementado algumas melhorias.">
+      <option name="closed" value="true" />
+      <created>1783390013983</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1783390013983</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -190,6 +174,7 @@
     <MESSAGE value="Implementado a criação de pedidos, listar pedidos e atualizar status dos pedidos, também foi feito a correção de código no autenticarUsuario.py" />
     <MESSAGE value="Adicionado a simulação de pagamento." />
     <MESSAGE value="Conteúdo adicionado:&#10;&#10;+Adicionado o estoque&#10;Descrição: Permite o gerente atualizar o estoque.&#10;&#10;+Consultar estoque&#10;Descrição: Permite o funcionário ou gerente consultar o estoque.&#10;&#10;+Pedido não é criado sem estoque&#10;Descrição: Clientes não podem fazer pedidos se não tiver o item em estoque." />
-    <option name="LAST_COMMIT_MESSAGE" value="Conteúdo adicionado:&#10;&#10;+Adicionado o estoque&#10;Descrição: Permite o gerente atualizar o estoque.&#10;&#10;+Consultar estoque&#10;Descrição: Permite o funcionário ou gerente consultar o estoque.&#10;&#10;+Pedido não é criado sem estoque&#10;Descrição: Clientes não podem fazer pedidos se não tiver o item em estoque." />
+    <MESSAGE value="Conteúdo adicionado: auditoria.py, fidelidade.py e consentimentoLGPD&#10;&#10;+Auditoria&#10;Descrição: Permite o gerente logs de auditoria.&#10;&#10;+fidelidade&#10;Descrição: Cliente recebe pontos de fidelidade por pedido entregue.&#10;&#10;+consentimento LGPD&#10;Descrição: Cliente precisa aceitar o consimento LGPD para acessar e consultar os seus pontos.&#10;&#10;+consultaPontos&#10;Descrição: Cliente consulta pontos de fidelidade.&#10;&#10;+resgatarPontos&#10;Descrição: Cliente pode resgatar os seus pontos de fidelidade.&#10;&#10;+CorreçõesDeCódigo&#10;Descrição: Feito correção de código e implementado algumas melhorias." />
+    <option name="LAST_COMMIT_MESSAGE" value="Conteúdo adicionado: auditoria.py, fidelidade.py e consentimentoLGPD&#10;&#10;+Auditoria&#10;Descrição: Permite o gerente logs de auditoria.&#10;&#10;+fidelidade&#10;Descrição: Cliente recebe pontos de fidelidade por pedido entregue.&#10;&#10;+consentimento LGPD&#10;Descrição: Cliente precisa aceitar o consimento LGPD para acessar e consultar os seus pontos.&#10;&#10;+consultaPontos&#10;Descrição: Cliente consulta pontos de fidelidade.&#10;&#10;+resgatarPontos&#10;Descrição: Cliente pode resgatar os seus pontos de fidelidade.&#10;&#10;+CorreçõesDeCódigo&#10;Descrição: Feito correção de código e implementado algumas melhorias." />
   </component>
 </project>
